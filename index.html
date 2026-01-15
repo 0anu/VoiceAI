@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice AI - CSV Query Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🎤 Voice AI Query Assistant</h1>
+                <p>Upload CSV files and ask questions using your voice</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section class="section upload-section">
+                <h2>Step 1: Upload CSV File</h2>
+                <div class="upload-area" id="uploadArea">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <p class="upload-text">Drag & drop your CSV file here or click to select</p>
+                    <input type="file" id="csvInput" accept=".csv" hidden>
+                </div>
+                <div id="fileInfo" class="file-info" style="display: none;">
+                    <p><strong>Selected file:</strong> <span id="fileName"></span></p>
+                    <button id="uploadBtn" class="btn btn-primary">Upload & Initialize</button>
+                </div>
+                <div id="uploadStatus" class="status-message"></div>
+            </section>
+
+            <!-- Query Section -->
+            <section class="section query-section" id="querySection" style="display: none;">
+                <h2>Step 2: Ask Questions</h2>
+
+                <!-- API Key Input -->
+                <div class="api-key-section">
+                    <label for="apiKey" class="label">Groq API Key (Optional)</label>
+                    <input 
+                        type="password" 
+                        id="apiKey" 
+                        class="input" 
+                        placeholder="Enter your Groq API key (or use environment variable)"
+                    >
+                    <small class="help-text">Leave blank to use the API key from environment variables</small>
+                </div>
+
+                <!-- Query Input Method Selection -->
+                <div class="query-method">
+                    <button id="voiceBtn" class="method-btn active" title="Ask using voice">
+                        <span class="icon">🎤</span>
+                        <span>Voice</span>
+                    </button>
+                    <button id="textBtn" class="method-btn" title="Ask using text">
+                        <span class="icon">⌨️</span>
+                        <span>Text</span>
+                    </button>
+                </div>
+
+                <!-- Voice Input Section -->
+                <div id="voiceInputSection" class="input-section">
+                    <div class="microphone-controls">
+                        <button id="recordBtn" class="btn btn-record">
+                            <span class="record-icon">🎤</span>
+                            Click to Start Recording
+                        </button>
+                        <div id="recordingStatus" class="recording-status" style="display: none;">
+                            <span class="recording-indicator"></span>
+                            <span id="recordingTime">Recording...</span>
+                        </div>
+                        <div id="waveform" class="waveform" style="display: none;">
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                        </div>
+                    </div>
+                    <div class="transcription-area">
+                        <label class="label">Transcribed Text</label>
+                        <div id="transcription" class="transcription-text">Ready to record...</div>
+                    </div>
+                </div>
+
+                <!-- Text Input Section -->
+                <div id="textInputSection" class="input-section" style="display: none;">
+                    <label for="queryInput" class="label">Your Question</label>
+                    <textarea 
+                        id="queryInput" 
+                        class="input textarea" 
+                        placeholder="Ask a question about your data..."
+                        rows="4"
+                    ></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button id="submitBtn" class="btn btn-primary btn-large">Generate SQL & Get Results</button>
+            </section>
+
+            <!-- Results Section -->
+            <section class="section results-section" id="resultsSection" style="display: none;">
+                <h2>Results</h2>
+
+                <div class="result-card">
+                    <h3>Original Query</h3>
+                    <p id="originalQuery" class="query-text"></p>
+                </div>
+
+                <div class="result-card">
+                    <h3>Retrieved Context</h3>
+                    <pre id="context" class="context-text"></pre>
+                </div>
+
+                <div class="result-card">
+                    <h3>Generated SQL</h3>
+                    <div class="sql-container">
+                        <pre id="generatedSQL" class="sql-text"></pre>
+                        <button id="copySQLBtn" class="btn btn-secondary btn-small">📋 Copy SQL</button>
+                    </div>
+                </div>
+
+                <button id="askAnotherBtn" class="btn btn-primary">Ask Another Question</button>
+            </section>
+        </main>
+
+        <!-- Loading Spinner -->
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="spinner">
+                <div class="spinner-ring"></div>
+                <p id="loadingText">Processing...</p>
+            </div>
+        </div>
+
+        <!-- Error Toast -->
+        <div id="errorToast" class="toast error-toast" style="display: none;"></div>
+
+        <!-- Success Toast -->
+        <div id="successToast" class="toast success-toast" style="display: none;"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Voice AI CSV Query Assistant | Powered by LangChain & Whisper AI</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

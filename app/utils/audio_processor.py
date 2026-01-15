@@ -15,4 +15,4 @@ class AudioProcessor:
         )
 
         return "".join([segment.text for segment in segment_raw])
-    
+
